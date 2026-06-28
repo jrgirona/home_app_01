@@ -1,0 +1,16 @@
+[project]
+name = "matilde-martin-backend"
+version = "0.1.0"
+description = "Backend for MatildeMartin financial tool"
+readme = "../README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "fastapi>=0.111.0",
+    "uvicorn>=0.30.1",
+    "pandas>=2.2.2",
+    "pdfplumber>=0.11.1",
+    "openpyxl>=3.1.2",
+    "pytesseract>=0.3.10",
+    "python-multipart>=0.0.9",
+    "pdf2image>=1.17.0"
+]

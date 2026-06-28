@@ -17,13 +17,10 @@ Open a terminal (PowerShell or Command Prompt) and run the following commands:
 # Navigate to the backend folder
 cd backend
 
-# Create a virtual environment using uv
-uv venv
+# Sync dependencies and create the virtual environment from pyproject.toml
+uv sync
 
-# Install the required Python dependencies blazingly fast
-uv pip install -r requirements.txt
-
-# Start the FastAPI server using uv
+# Start the server
 uv run uvicorn main:app --reload
 ```
 *The backend will now be running on `http://127.0.0.1:8000`.*
