@@ -8,6 +8,7 @@ env/
 # Data and Results (to be ignored from Git)
 Data&Docs/
 Results/
+references/
 
 # Next.js/Vite builds
 .next/
