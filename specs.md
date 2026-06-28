@@ -71,11 +71,12 @@ The MatildeMartin app is a local web-based tool designed to process financial da
    - Columns: `Status`, `Recibo`, `Importe`.
    - Read PDFs in `Data&Docs/202X` starting with "Electricidad".
    - Extract the month and year from the filename (e.g., `XX-202Y`) and map to `Recibo`.
-   - Search for "IMPORTE TOTAL: EUROS" followed by asterisks, extract the amount (e.g., 51,98), and map to `Importe` (e.g., 51.98).
+   - Search for variations of "IMPORTE TOTAL: EUROS" (ignoring any missing whitespace caused by OCR) followed by asterisks, extract the amount (e.g., 51,98), and map to `Importe` (e.g., 51.98).
 5. **Status Column Logic (Both Tabs):**
    - The newest receipt gets the string "Nuevo recibo" in the `Status` column.
    - If appending to an existing file, remove "Nuevo recibo" from the previous row and place it on the new appended row.
 6. **Summary Calculations:**
+   - *Note: Empty or corrupted cells are safely ignored (treated as 0.0) during calculations to prevent crashes.*
    - Luz (Rows 14-16) and Agua (Rows 8-10) display summary values:
      - `Total desde el nuevo recibo`: Sum of newly added receipts during this processing session.
      - `Gran total`: Sum of all receipts for the year.
