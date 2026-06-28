@@ -10,8 +10,12 @@ import pytesseract
 from pdf2image import convert_from_path
 
 def safe_float(val):
+    if val is None:
+        return 0.0
     try:
-        return float(val) if val is not None else 0.0
+        if isinstance(val, str):
+            val = val.replace(',', '.')
+        return float(val)
     except (ValueError, TypeError):
         return 0.0
 
@@ -97,6 +101,11 @@ def process_inmobiliaria(year, data_dir, results_dir):
         while agua_next_row <= 7 and ws_agua.cell(row=agua_next_row, column=2).value:
             agua_next_row += 1
             
+        # Clear old 'Nuevo recibo' BEFORE inserting new ones
+        for r in range(2, 8):
+            if ws_agua.cell(row=r, column=1).value == "Nuevo recibo":
+                ws_agua.cell(row=r, column=1).value = None
+                
         # We need to keep track of newly added rows to calculate "Total desde el nuevo recibo"
         first_new_agua_row = agua_next_row
         
@@ -121,15 +130,18 @@ def process_inmobiliaria(year, data_dir, results_dir):
                         else:
                             importe = 0.0
                             
-                        # Clear old 'Nuevo recibo'
-                        for r in range(2, agua_next_row):
-                            if ws_agua.cell(row=r, column=1).value == "Nuevo recibo":
-                                ws_agua.cell(row=r, column=1).value = None
-                                
-                        ws_agua.cell(row=agua_next_row, column=1).value = "Nuevo recibo"
+                        if agua_next_row == first_new_agua_row:
+                            ws_agua.cell(row=agua_next_row, column=1).value = "Nuevo recibo"
+                            
                         ws_agua.cell(row=agua_next_row, column=2).value = recibo
-                        ws_agua.cell(row=agua_next_row, column=3).value = int(vol)
-                        ws_agua.cell(row=agua_next_row, column=4).value = importe
+                        
+                        vol_cell = ws_agua.cell(row=agua_next_row, column=3)
+                        vol_cell.value = float(vol)
+                        vol_cell.number_format = '0.00'
+                        
+                        importe_cell = ws_agua.cell(row=agua_next_row, column=4)
+                        importe_cell.value = importe
+                        importe_cell.number_format = '0.00'
                         
                         agua_next_row += 1
                     except Exception as e:
@@ -155,6 +167,9 @@ def process_inmobiliaria(year, data_dir, results_dir):
         ws_agua.cell(row=9, column=4).value = gran_total
         ws_agua.cell(row=10, column=3).value = "Promedio (3 últimos meses)"
         ws_agua.cell(row=10, column=4).value = promedio
+        
+        for r in range(8, 11):
+            ws_agua.cell(row=r, column=4).number_format = '0.00'
 
 
     # --- PROCESS LUZ ---
@@ -167,6 +182,11 @@ def process_inmobiliaria(year, data_dir, results_dir):
         while luz_next_row <= 13 and ws_luz.cell(row=luz_next_row, column=2).value:
             luz_next_row += 1
             
+        # Clear old 'Nuevo recibo' BEFORE inserting new ones
+        for r in range(2, 14):
+            if ws_luz.cell(row=r, column=1).value == "Nuevo recibo":
+                ws_luz.cell(row=r, column=1).value = None
+                
         first_new_luz_row = luz_next_row
         
         for pdf_path in luz_pdfs:
@@ -198,14 +218,14 @@ def process_inmobiliaria(year, data_dir, results_dir):
             if not found_importe:
                  log_error(base_dir, f"Failed to find IMPORTE TOTAL in {filename}", text)
                  
-            # Clear old 'Nuevo recibo'
-            for r in range(2, luz_next_row):
-                if ws_luz.cell(row=r, column=1).value == "Nuevo recibo":
-                    ws_luz.cell(row=r, column=1).value = None
-                    
-            ws_luz.cell(row=luz_next_row, column=1).value = "Nuevo recibo"
+            if luz_next_row == first_new_luz_row:
+                ws_luz.cell(row=luz_next_row, column=1).value = "Nuevo recibo"
+                
             ws_luz.cell(row=luz_next_row, column=2).value = recibo
-            ws_luz.cell(row=luz_next_row, column=3).value = importe
+            
+            importe_cell = ws_luz.cell(row=luz_next_row, column=3)
+            importe_cell.value = importe
+            importe_cell.number_format = '0.00'
             
             luz_next_row += 1
 
@@ -225,6 +245,9 @@ def process_inmobiliaria(year, data_dir, results_dir):
         ws_luz.cell(row=15, column=3).value = gran_total
         ws_luz.cell(row=16, column=2).value = "Promedio (3 últimos meses)"
         ws_luz.cell(row=16, column=3).value = promedio
+        
+        for r in range(14, 17):
+            ws_luz.cell(row=r, column=3).number_format = '0.00'
 
     wb.save(target_path)
     wb.close()
