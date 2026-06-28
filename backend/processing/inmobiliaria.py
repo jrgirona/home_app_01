@@ -144,9 +144,9 @@ def process_inmobiliaria(year, data_dir, results_dir):
         if first_new_agua_row < agua_next_row:
             total_nuevo = sum(safe_float(ws_agua.cell(row=r, column=4).value) for r in range(first_new_agua_row, agua_next_row))
             
-        gran_total = sum(safe_float(ws_agua.cell(row=r, column=4).value) for r in range(2, 8))
+        gran_total = sum(safe_float(ws_agua.cell(row=r, column=4).value) for r in range(2, agua_next_row))
         
-        last_receipts = [safe_float(ws_agua.cell(row=r, column=4).value) for r in range(2, 8) if ws_agua.cell(row=r, column=4).value]
+        last_receipts = [safe_float(ws_agua.cell(row=r, column=4).value) for r in range(2, agua_next_row) if ws_agua.cell(row=r, column=4).value]
         promedio = sum(last_receipts[-3:]) / len(last_receipts[-3:]) if last_receipts else 0.0
         
         ws_agua.cell(row=8, column=3).value = "Total desde el nuevo recibo"
@@ -214,9 +214,9 @@ def process_inmobiliaria(year, data_dir, results_dir):
         if first_new_luz_row < luz_next_row:
             total_nuevo = sum(safe_float(ws_luz.cell(row=r, column=3).value) for r in range(first_new_luz_row, luz_next_row))
             
-        gran_total = sum(safe_float(ws_luz.cell(row=r, column=3).value) for r in range(2, 14))
+        gran_total = sum(safe_float(ws_luz.cell(row=r, column=3).value) for r in range(2, luz_next_row))
         
-        last_receipts = [safe_float(ws_luz.cell(row=r, column=3).value) for r in range(2, 14) if ws_luz.cell(row=r, column=3).value]
+        last_receipts = [safe_float(ws_luz.cell(row=r, column=3).value) for r in range(2, luz_next_row) if ws_luz.cell(row=r, column=3).value]
         promedio = sum(last_receipts[-3:]) / len(last_receipts[-3:]) if last_receipts else 0.0
         
         ws_luz.cell(row=14, column=2).value = "Total desde el nuevo recibo"
