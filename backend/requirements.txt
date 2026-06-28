@@ -5,3 +5,4 @@ pdfplumber
 openpyxl
 pytesseract
 python-multipart
+pdf2image
