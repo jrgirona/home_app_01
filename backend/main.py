@@ -26,7 +26,7 @@ class GenerateRequest(BaseModel):
 async def generate_report(request: GenerateRequest):
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     data_dir = os.path.join(base_dir, "Data&Docs", str(request.year))
-    results_dir = os.path.join(base_dir, "Results", request.report_type)
+    results_dir = os.path.join(base_dir, "Results", request.report_type, str(request.year))
     
     if not os.path.exists(data_dir):
         raise HTTPException(status_code=400, detail=f"Data directory {data_dir} does not exist.")

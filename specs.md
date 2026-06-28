@@ -16,8 +16,8 @@ The MatildeMartin app is a local web-based tool designed to process financial da
 * **Root:** `C:\Users\Ramon\Documents\Projects\OwnFinances\MatildeMartin`
 * **Input Data:** `Data&Docs/<Year>/` - Contains the source files for the given year.
 * **Outputs:** 
-  * `Results/IRPF/` - Destination for generated IRPF Excel reports.
-  * `Results/Inmobiliaria/` - Destination for generated Inmobiliaria Excel reports.
+  * `Results/IRPF/<Year>/` - Destination for generated IRPF Excel reports.
+  * `Results/Inmobiliaria/<Year>/` - Destination for generated Inmobiliaria Excel reports.
 
 ## 4. User Interface Features
 * **Year Selector:** A dropdown menu allowing the user to select the financial year. The options will dynamically span from 2025 up to the current calendar year.
@@ -75,6 +75,11 @@ The MatildeMartin app is a local web-based tool designed to process financial da
 5. **Status Column Logic (Both Tabs):**
    - The newest receipt gets the string "Nuevo recibo" in the `Status` column.
    - If appending to an existing file, remove "Nuevo recibo" from the previous row and place it on the new appended row.
-6. **OCR & Error Handling:**
+6. **Summary Calculations:**
+   - Luz (Rows 14-16) and Agua (Rows 8-10) display summary values:
+     - `Total desde el nuevo recibo`: Sum of newly added receipts during this processing session.
+     - `Gran total`: Sum of all receipts for the year.
+     - `Promedio (3 últimos meses)`: Average of the last up to 3 non-empty receipts.
+7. **OCR & Error Handling:**
    - Use Tesseract OCR (with Spanish language support) for PDFs that lack directly extractable text.
-   - If any receipts cannot be read or fields are missing, write the issues to a dedicated error log file.
+   - If any receipts cannot be read or fields are missing, write the issues to a dedicated error log file in a tabular format (Date/Time | Error Message | Dump of Receipt Text).
