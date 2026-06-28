@@ -78,6 +78,7 @@ The MatildeMartin app is a local web-based tool designed to process financial da
 6. **Summary Calculations:**
    - *Note: Empty or corrupted cells are safely ignored (treated as 0.0) during calculations to prevent crashes.*
    - Luz (Rows 14-16) and Agua (Rows 8-10) display summary values:
+     - *Boundary Logic*: The calculations dynamically track the exact boundaries of the recorded receipts (from Row 2 down to the last strictly recorded row) to ensure sums only iterate over active data.
      - `Total desde el nuevo recibo`: Sum of newly added receipts during this processing session.
      - `Gran total`: Sum of all receipts for the year.
      - `Promedio (3 últimos meses)`: Average of the last up to 3 non-empty receipts.
