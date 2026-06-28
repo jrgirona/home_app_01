@@ -1,0 +1,26 @@
+# Dependencies
+node_modules/
+__pycache__/
+venv/
+env/
+.env
+
+# Data and Results (to be ignored from Git)
+Data&Docs/
+Results/
+
+# Next.js/Vite builds
+.next/
+dist/
+out/
+build/
+
+# IDE files
+.vscode/
+.idea/
+
+# Mac OS
+.DS_Store
+
+# Office Temp Files
+~$*
