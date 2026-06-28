@@ -3,7 +3,7 @@
 This is a local financial processing tool designed to read local PDFs and Excel files and generate highly formatted "IRPF" and "Inmobiliaria" Excel reports. It uses a modern React frontend and a Python FastAPI backend for advanced data extraction (OCR + DataFrames).
 
 ## Prerequisites
-1. **Python 3.9+** installed on your system.
+1. **uv** installed on your system (the extremely fast Python package manager).
 2. **Node.js & npm** installed on your system.
 3. **Tesseract OCR** installed on your machine (with the Spanish language pack) and available in your system PATH.
 
@@ -17,15 +17,14 @@ Open a terminal (PowerShell or Command Prompt) and run the following commands:
 # Navigate to the backend folder
 cd backend
 
-# (Optional but recommended) Create and activate a virtual environment
-python -m venv venv
-.\venv\Scripts\activate
+# Create a virtual environment using uv
+uv venv
 
-# Install the required Python dependencies
-pip install -r requirements.txt
+# Install the required Python dependencies blazingly fast
+uv pip install -r requirements.txt
 
-# Start the FastAPI server
-uvicorn main:app --reload
+# Start the FastAPI server using uv
+uv run uvicorn main:app --reload
 ```
 *The backend will now be running on `http://127.0.0.1:8000`.*
 
