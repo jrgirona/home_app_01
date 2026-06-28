@@ -1,0 +1,11 @@
+2026-06-28 21:07:19	Failed to find IMPORTE TOTAL in Electricidad 11-2025.pdf	BSESNL58PM0AP18FF2RR0PP77P15XX8XX40XX201519072 CARGOPORADEUDODIRECTO ACREEDOR: GeoAlternativaSL IDACREEDOR:ES81000B87382644 REF.MANDATO: SLMP024359754 VENCIMIENTO: 05-11-2025 REF.ADEUDO: C-005376893 DEUDOR: GUTIERREZGILMARIAELOISA Concepto: PodoFacturaLUZ/GAS PARAACLARACIONESDIRÍJANSEALACREEDORARRIBACITADO IMPORTETOTAL:EUROS ************51,98 N°ADEUDO: 2025308001828474 TITULARES En la fecha indicada hemos CARGADO en su cuenta, por el RAMONGIRONABALLESTER concepto expresado, la cantidad señalada como IMPORTE MARIADOLORESGALIANAVIDALYOTROS TOTAL. OFICINA FECHA IBAN COLMENAR-ELMIRADOR 05-11-25 ES580182 0775 8402 0151 9072 G10000088955979572025-11-0501822079002000000000851907P 039/02 20251106 J03H01
+Error generating Inmobiliaria for 2025:
+Traceback (most recent call last):
+  File "C:\Users\Ramon\Documents\Projects\OwnFinances\MatildeMartin\backend\main.py", line 41, in generate_report
+    result_file = process_inmobiliaria(str(request.year), data_dir, results_dir)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ramon\Documents\Projects\OwnFinances\MatildeMartin\backend\processing\inmobiliaria.py", line 213, in process_inmobiliaria
+    gran_total = sum(ws_luz.cell(row=r, column=3).value or 0.0 for r in range(2, 14))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: unsupported operand type(s) for +: 'float' and 'str'
+

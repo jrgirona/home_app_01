@@ -9,6 +9,12 @@ import pdfplumber
 import pytesseract
 from pdf2image import convert_from_path
 
+def safe_float(val):
+    try:
+        return float(val) if val is not None else 0.0
+    except (ValueError, TypeError):
+        return 0.0
+
 def log_error(base_dir, message, receipt_text=""):
     log_path = os.path.join(base_dir, "error.log")
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -136,11 +142,11 @@ def process_inmobiliaria(year, data_dir, results_dir):
         # Calculate Agua summaries (Rows 8, 9, 10, Label in Col 3, Value in Col 4)
         total_nuevo = 0.0
         if first_new_agua_row < agua_next_row:
-            total_nuevo = sum(ws_agua.cell(row=r, column=4).value or 0.0 for r in range(first_new_agua_row, agua_next_row))
+            total_nuevo = sum(safe_float(ws_agua.cell(row=r, column=4).value) for r in range(first_new_agua_row, agua_next_row))
             
-        gran_total = sum(ws_agua.cell(row=r, column=4).value or 0.0 for r in range(2, 8))
+        gran_total = sum(safe_float(ws_agua.cell(row=r, column=4).value) for r in range(2, 8))
         
-        last_receipts = [ws_agua.cell(row=r, column=4).value or 0.0 for r in range(2, 8) if ws_agua.cell(row=r, column=4).value]
+        last_receipts = [safe_float(ws_agua.cell(row=r, column=4).value) for r in range(2, 8) if ws_agua.cell(row=r, column=4).value]
         promedio = sum(last_receipts[-3:]) / len(last_receipts[-3:]) if last_receipts else 0.0
         
         ws_agua.cell(row=8, column=3).value = "Total desde el nuevo recibo"
@@ -176,20 +182,18 @@ def process_inmobiliaria(year, data_dir, results_dir):
             found_importe = False
             lines = text.split('\n')
             for line in lines:
-                if 'IMPORTE TOTAL: EUROS' in line:
-                    importe_match = re.search(r'\*{1,}\s*(\d+[,.]\d+)', line)
+                importe_match = re.search(r'IMPORTE\s*TOTAL\s*:\s*EUROS\s*\*+\s*(\d+[,.]\d+)', line)
+                if importe_match:
+                    importe = float(importe_match.group(1).replace(',', '.'))
+                    found_importe = True
+                    break
+            if not found_importe:
+                for line in lines:
+                    importe_match = re.search(r'IMPORTE\s*TOTAL.*?(\d+[,.]\d+)$', line.strip())
                     if importe_match:
                         importe = float(importe_match.group(1).replace(',', '.'))
                         found_importe = True
                         break
-            if not found_importe:
-                for line in lines:
-                    if 'IMPORTE TOTAL' in line:
-                        importe_match = re.search(r'(\d+[,.]\d+)$', line.strip())
-                        if importe_match:
-                            importe = float(importe_match.group(1).replace(',', '.'))
-                            found_importe = True
-                            break
                             
             if not found_importe:
                  log_error(base_dir, f"Failed to find IMPORTE TOTAL in {filename}", text)
@@ -208,11 +212,11 @@ def process_inmobiliaria(year, data_dir, results_dir):
         # Calculate Luz summaries (Rows 14, 15, 16, Label in Col 2, Value in Col 3)
         total_nuevo = 0.0
         if first_new_luz_row < luz_next_row:
-            total_nuevo = sum(ws_luz.cell(row=r, column=3).value or 0.0 for r in range(first_new_luz_row, luz_next_row))
+            total_nuevo = sum(safe_float(ws_luz.cell(row=r, column=3).value) for r in range(first_new_luz_row, luz_next_row))
             
-        gran_total = sum(ws_luz.cell(row=r, column=3).value or 0.0 for r in range(2, 14))
+        gran_total = sum(safe_float(ws_luz.cell(row=r, column=3).value) for r in range(2, 14))
         
-        last_receipts = [ws_luz.cell(row=r, column=3).value or 0.0 for r in range(2, 14) if ws_luz.cell(row=r, column=3).value]
+        last_receipts = [safe_float(ws_luz.cell(row=r, column=3).value) for r in range(2, 14) if ws_luz.cell(row=r, column=3).value]
         promedio = sum(last_receipts[-3:]) / len(last_receipts[-3:]) if last_receipts else 0.0
         
         ws_luz.cell(row=14, column=2).value = "Total desde el nuevo recibo"
